@@ -85,7 +85,7 @@ const ListPanel = () => {
   };
 
   return (
-    <div className="mx-auto list-panel">
+    <div className="mx-auto pb-10">
       <InfiniteLoader
         ref={infiniteLoaderRef}
         isRowLoaded={({ index }) => {
@@ -104,26 +104,30 @@ const ListPanel = () => {
         rowCount={rowCount}
       >
         {({ onRowsRendered, registerChild }) => (
-          <AutoSizer>
-            {({ width, height }) => (
-              <List
-                ref={registerChild}
-                onRowsRendered={onRowsRendered}
-                width={width}
-                height={height}
-                rowCount={rowCount}
-                rowRenderer={rowRenderer}
-                deferredMeasurementCache={cellMeasurerCache}
-                rowHeight={cellMeasurerCache.rowHeight}
-                overscanRowCount={10}
-                noRowsRenderer={() => {
-                  return (
-                    <div className="text-white no-records">No movies found</div>
-                  );
-                }}
-              />
-            )}
-          </AutoSizer>
+          <div className="list-panel">
+            <AutoSizer>
+              {({ width, height }) => (
+                <List
+                  ref={registerChild}
+                  onRowsRendered={onRowsRendered}
+                  width={width}
+                  height={height}
+                  rowCount={rowCount}
+                  rowRenderer={rowRenderer}
+                  deferredMeasurementCache={cellMeasurerCache}
+                  rowHeight={cellMeasurerCache.rowHeight}
+                  overscanRowCount={10}
+                  noRowsRenderer={() => {
+                    return (
+                      <div className="text-white no-records">
+                        No movies found
+                      </div>
+                    );
+                  }}
+                />
+              )}
+            </AutoSizer>
+          </div>
         )}
       </InfiniteLoader>
     </div>
