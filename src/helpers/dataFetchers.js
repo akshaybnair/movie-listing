@@ -1,5 +1,5 @@
 const getPageUrl = (pageNum) => {
-  return `/CONTENTLISTINGPAGE-PAGE${pageNum}.json`;
+  return `CONTENTLISTINGPAGE-PAGE${pageNum}.json`;
 };
 export const fetchPage = async (pageNumber) => {
   const data = await fetch(getPageUrl(pageNumber));

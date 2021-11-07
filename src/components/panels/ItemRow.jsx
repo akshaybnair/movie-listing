@@ -1,30 +1,44 @@
-import React from "react";
+import React, { forwardRef } from "react";
 
-const ItemRow = ({ movies, indices, style }) => {
+// background-image: url("/placeholder_for_missing_posters.png");
+
+const ItemRow = ({ movies, indices, style, measure }, ref) => {
   return (
     <div
+      ref={ref}
       style={style}
-      className="flex flex-1 flex-row justify-around mx-3"
+      className="flex flex-1 flex-row justify-around  item-row"
     >
       {indices.map((index) => {
         const movie = movies[index];
-        return <ListItem key={`${movie.name}-${index}`} movie={movie} />;
+        return (
+          <ListItem
+            key={`${movie.name}-${index}`}
+            movie={movie}
+            measure={measure}
+          />
+        );
       })}
     </div>
   );
 };
 
-const ListItem = ({ movie }) => {
+const ListItem = ({ movie, measure }) => {
   return (
-    <div className="w-1/3 flex flex-col p-1 py-2 item h-full mb-3">
+    <div className=" flex flex-col p-1 py-2 item h-full mb-3 item">
       <div>
-        <img src={movie["poster-image"]} alt={movie.name} />
+          <img
+            className="image"
+            src={movie["poster-image"]}
+            alt={movie.name}
+            // onLoad={measure}
+          />
       </div>
       <div>
-        <span className="text-white mt-2">{movie.name}</span>
+        <span className="text-white mt-2 movie-description">{movie.name}</span>
       </div>
     </div>
   );
 };
 
-export default ItemRow;
+export default forwardRef(ItemRow);

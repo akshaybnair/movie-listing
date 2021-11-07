@@ -43,7 +43,6 @@ const rootReducer = (state = inititalState, action) => {
       const filteredMovies = state.movies.filter((movie) =>
         movie.name.toLowerCase().includes(action.payload.toLowerCase())
       );
-      console.log(filteredMovies);
       return {
         ...state,
         searchMode: true,

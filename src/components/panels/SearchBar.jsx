@@ -12,11 +12,16 @@ const SearchBar = () => {
       dispatch(removeSearch());
     }
   }, [searchKey, dispatch]);
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+    searchKey !== "" && dispatch(searchMovie(searchKey));
+  };
   return (
-    <div className="flex justify-start align-middle header fixed h-10">
+    <div className="bg-black py-10 flex justify-start items-center header fixed h-10 search-bar w-full">
       {searchMode && searchKey !== "" && (
         <span
-          className="mr-2 h-1 cursor-pointer"
+          className="mr-2 h-1 cursor-pointer icon flex-none"
           onClick={() => {
             setSearchKey("");
           }}
@@ -24,25 +29,22 @@ const SearchBar = () => {
           <img src="Back.png" alt="back arrow" />
         </span>
       )}
-      <div className="flex flex-1 m-0">
-        <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 h-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          type="text"
-          name="query"
-          value={searchKey}
-          onChange={(e) => {
-            setSearchKey(e.target.value);
-          }}
-        />
-        <span
-          className="ml-2 cursor-pointer"
-          onClick={() => {
-            searchKey !== "" && dispatch(searchMovie(searchKey));
-          }}
-        >
-          <img src="search.png" alt="seach button" />
-        </span>
+      <div className="">
+        <form onSubmit={onSubmit}>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 h-full text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            type="text"
+            name="query"
+            value={searchKey}
+            onChange={(e) => {
+              setSearchKey(e.target.value);
+            }}
+          />
+        </form>
       </div>
+      <span className="cursor-pointer icon flex-none ml-2" onClick={onsubmit}>
+        <img src="search.png" alt="seach button" />
+      </span>
     </div>
   );
 };

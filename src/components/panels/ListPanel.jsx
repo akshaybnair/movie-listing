@@ -3,8 +3,8 @@ import {
   List,
   AutoSizer,
   InfiniteLoader,
-  // CellMeasurer,
-  // CellMeasurerCache,
+  CellMeasurer,
+  CellMeasurerCache,
 } from "react-virtualized";
 import { useSelector } from "react-redux";
 import ItemRow from "./ItemRow";
@@ -35,11 +35,12 @@ const getRowsAmount = (itemsAmount, hasMore, searchMode) => {
   return Math.ceil(itemsAmount / COUNT_PER_ROW) + (hasMore ? 1 : 0);
 };
 
-// const cellMeasurerCache = new CellMeasurerCache({
-//   fixedWidth: true,
-//   defaultHeight: 300,
-//   minWidth: 300,
-// });
+const cellMeasurerCache = new CellMeasurerCache({
+  fixedWidth: true,
+  defaultHeight: 300,
+  minWidth: 300,
+});
+
 const ListPanel = () => {
   const infiniteLoaderRef = useRef();
 
@@ -47,7 +48,6 @@ const ListPanel = () => {
 
   const {
     nextPageAvailable,
-    // movies,
     filteredMovies: movies,
     currentPage: currentPageNumber,
     isLoading: isNextPageLoading,
@@ -63,33 +63,29 @@ const ListPanel = () => {
     );
 
     return (
-      // <CellMeasurer
-      //   key={key}
-      //   cache={cellMeasurerCache}
-      //   parent={parent}
-      //   columnIndex={0}
-      //   rowIndex={index}
-      // >
-      //   {({ registerChild }) => (
-      <ItemRow
-        // ref={registerChild}
+      <CellMeasurer
         key={key}
-        movies={movies}
-        indices={moviesIndices}
-        style={style}
-      />
-      //   )}
-      // </CellMeasurer>
+        cache={cellMeasurerCache}
+        parent={parent}
+        columnIndex={0}
+        rowIndex={index}
+      >
+        {({ registerChild, measure }) => (
+          <ItemRow
+            measure={measure}
+            ref={registerChild}
+            key={key}
+            movies={movies}
+            indices={moviesIndices}
+            style={style}
+          />
+        )}
+      </CellMeasurer>
     );
   };
 
   return (
-    <div
-      className="mx-auto mt-10 pt-5 list"
-      style={{
-        width: "calc(100vh - 210px)",
-      }}
-    >
+    <div className="mx-auto list-panel">
       <InfiniteLoader
         ref={infiniteLoaderRef}
         isRowLoaded={({ index }) => {
@@ -108,33 +104,26 @@ const ListPanel = () => {
         rowCount={rowCount}
       >
         {({ onRowsRendered, registerChild }) => (
-          <div
-            // style={{
-            //   width: "100%",
-            //   height: "100vh",
-            // }}
-            className="w-full h-screen"
-          >
-            <AutoSizer>
-              {({ width, height }) => (
-                <List
-                  ref={registerChild}
-                  onRowsRendered={onRowsRendered}
-                  width={width}
-                  height={height}
-                  rowCount={rowCount}
-                  rowRenderer={rowRenderer}
-                  // deferredMeasurementCache={cellMeasurerCache}
-                  // rowHeight={cellMeasurerCache.rowHeight}
-                  rowHeight={350}
-                  overscanRowCount={10}
-                  noRowsRenderer={() => {
-                    <span className="text-white">No movies found</span>;
-                  }}
-                />
-              )}
-            </AutoSizer>
-          </div>
+          <AutoSizer>
+            {({ width, height }) => (
+              <List
+                ref={registerChild}
+                onRowsRendered={onRowsRendered}
+                width={width}
+                height={height}
+                rowCount={rowCount}
+                rowRenderer={rowRenderer}
+                deferredMeasurementCache={cellMeasurerCache}
+                rowHeight={cellMeasurerCache.rowHeight}
+                overscanRowCount={10}
+                noRowsRenderer={() => {
+                  return (
+                    <div className="text-white no-records">No movies found</div>
+                  );
+                }}
+              />
+            )}
+          </AutoSizer>
         )}
       </InfiniteLoader>
     </div>
